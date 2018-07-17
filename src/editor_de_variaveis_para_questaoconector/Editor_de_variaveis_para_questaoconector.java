@@ -21,7 +21,7 @@ public class Editor_de_variaveis_para_questaoconector {
     private JFileChooser fc = new JFileChooser();
     private File f;
     private int contador1=0, contador2=0;
-    private String texto1="", texto2="";
+    private String texto1="", texto2="", resposta = "";
     
     public int criarSeletorDeArquivos(){
         fc = new JFileChooser();
@@ -44,9 +44,11 @@ public class Editor_de_variaveis_para_questaoconector {
             String text="";
             while((ch=fis.read())!=-1){
                 if(ch!=10){
-                    text += String.valueOf(ch);
+                    text += String.valueOf((char)ch);
                 }else{
+                    text += String.valueOf((char)ch);
                     processarLinha(text);
+                    text="";
                 }
             }
             
@@ -56,8 +58,7 @@ public class Editor_de_variaveis_para_questaoconector {
         
     }
     
-    public void processarLinha(String text){
-        String resposta = "";
+    public void processarLinha(String text){        
         if(text.indexOf("xa)")>0){
             resposta = "0";
             text=text.replace("xa)", "a)");
@@ -91,7 +92,8 @@ public class Editor_de_variaveis_para_questaoconector {
                 }
             }           
         }
-        if(text.indexOf("xe)")>0){
+        texto1+=text;
+        if(text.indexOf("e)")>0){
             String text2 = "";
             String[] text3 = {"a","b","c","d","e"};
             text2+="a["+contador1+"]=R.string.q"+contador1+"\n";
