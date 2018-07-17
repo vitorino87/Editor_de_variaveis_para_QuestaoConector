@@ -60,23 +60,28 @@ public class Editor_de_variaveis_para_questaoconector {
         String resposta = "";
         if(text.indexOf("xa)")>0){
             resposta = "0";
-            text=text.substring(0, text.indexOf("xa)")) + 
-                    text.substring(text.indexOf("xa)")+1, text.length());
+            text=text.replace("xa)", "a)");
+            //text=text.substring(0, text.indexOf("xa)")) + 
+            //        text.substring(text.indexOf("xa)")+1, text.length());
         }else{
             if(text.indexOf("xb)")>0){
                 resposta = "1";
-                text=text.substring(0, text.indexOf("xb)")) + 
-                    text.substring(text.indexOf("xb)")+1, text.length());
+                text=text.replace("xb)", "b)");
+                //text=text.substring(0, text.indexOf("xb)")) + 
+                //    text.substring(text.indexOf("xb)")+1, text.length());
             }else{
                 if(text.indexOf("xc)")>0){
                     resposta = "2";
-                    text=text.substring(0, text.indexOf("xc)")) + 
-                        text.substring(text.indexOf("xc)")+1, text.length());
+                    text=text.replace("xc)", "c)");
+                    //text=text.substring(0, text.indexOf("xc)")) + 
+                    //    text.substring(text.indexOf("xc)")+1, text.length());
                 }else{
                     if(text.indexOf("xd)")>0){
                         resposta = "3";
-                        text=text.substring(0, text.indexOf("xd)")) + 
-                            text.substring(text.indexOf("xd)")+1, text.length());
+                        text=text.replace("xd)", "d)");
+                        //text=text.replace("xe)", "e)");
+                        //text=text.substring(0, text.indexOf("xd)")) + 
+                           // text.substring(text.indexOf("xd)")+1, text.length());
                     }else{
                         if(text.indexOf("xe)")>0){
                             resposta = "4";
