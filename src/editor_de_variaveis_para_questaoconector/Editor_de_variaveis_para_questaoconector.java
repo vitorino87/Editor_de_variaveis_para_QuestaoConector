@@ -31,6 +31,8 @@ public class Editor_de_variaveis_para_questaoconector {
         File f = null;
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             f = fc.getSelectedFile();
+        }else{
+            System.exit(0);
         }
         return f;
     }
@@ -65,39 +67,39 @@ public class Editor_de_variaveis_para_questaoconector {
         if (text.indexOf("e\">e)") > 0 || text.indexOf("e\">xe)") > 0) {            
             if (text.indexOf("e\">xe)") > 0) {
                 text = text.replace("xe)", "e)");
-                text2 += "b[" + contador + "][5]=4\n";
+                text2 += "b[" + contador + "][5]=4;\n";
                 salvarLinhasProcessadas(arquivo.getAbsolutePath() + "/conector.java", text2);
                 text2 = "";
             }            
             String[] text3 = {"a", "b", "c", "d", "e"};
-            text2 += "a[" + contador + "]=R.string.q" + contador + "\n";
+            text2 += "a[" + contador + "]=R.string.q" + contador + ";\n";
             for (int contador2 = 0; contador2 < 5; contador2++) {
-                text2 += "b[" + contador + "][" + contador2 + "]=R.string.q" + contador + text3[contador2] + "\n";
+                text2 += "b[" + contador + "][" + contador2 + "]=R.string.q" + contador + text3[contador2] + ";\n";
             }            
             contador++;
             //JOptionPane.showMessageDialog(null, text2);
             salvarLinhasProcessadas(arquivo.getAbsolutePath() + "/conector.java", text2);
         } else if (text.indexOf("xa)") > 0) {
             text = text.replace("xa)", "a)");
-            text2 += "b[" + contador + "][5]=0\n";
+            text2 += "b[" + contador + "][5]=0;\n";
             salvarLinhasProcessadas(arquivo.getAbsolutePath() + "/conector.java", text2);
             //text=text.substring(0, text.indexOf("xa)")) + 
             //        text.substring(text.indexOf("xa)")+1, text.length());
         } else if (text.indexOf("xb)") > 0) {
             text = text.replace("xb)", "b)");
-            text2 += "b[" + contador + "][5]=1\n";
+            text2 += "b[" + contador + "][5]=1;\n";
             salvarLinhasProcessadas(arquivo.getAbsolutePath() + "/conector.java", text2);
             //text=text.substring(0, text.indexOf("xb)")) + 
             //    text.substring(text.indexOf("xb)")+1, text.length());
         } else if (text.indexOf("xc)") > 0) {
             text = text.replace("xc)", "c)");
-            text2 += "b[" + contador + "][5]=2\n";
+            text2 += "b[" + contador + "][5]=2;\n";
             salvarLinhasProcessadas(arquivo.getAbsolutePath() + "/conector.java", text2);
             //text=text.substring(0, text.indexOf("xc)")) + 
             //    text.substring(text.indexOf("xc)")+1, text.length());
         } else if (text.indexOf("xd)") > 0) {
             text = text.replace("xd)", "d)");
-            text2 += "b[" + contador + "][5]=3\n";
+            text2 += "b[" + contador + "][5]=3;\n";
             salvarLinhasProcessadas(arquivo.getAbsolutePath() + "/conector.java", text2);
             //text=text.replace("xe)", "e)");
             //text=text.substring(0, text.indexOf("xd)")) + 
@@ -128,9 +130,10 @@ public class Editor_de_variaveis_para_questaoconector {
 
     public File selecionarLocalParaSalvar() {
         JFileChooser fc = new JFileChooser();
+        JOptionPane.showMessageDialog(null, "Escolha o local onde salvar");
         fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         int returnval = fc.showSaveDialog(fc);
-        File file = null;
+        File file=null;
         if (returnval == JFileChooser.APPROVE_OPTION) {
             file = fc.getSelectedFile();
         } else {
@@ -141,6 +144,12 @@ public class Editor_de_variaveis_para_questaoconector {
     }
 
     public static void main(String[] args) throws IOException {
+        JOptionPane.showMessageDialog(null, "Esse projeto consiste em criar dois arquivos: "
+                + "questao.xml e conector.java\n\nPara usá-lo corretamente siga os seguintes passos:\n"
+                + "1º Crie as questões num arquivo qualquer seguindo o padrão Questionation (padrão próprio);\n"
+                + "2º Utilizando o Notepad++ rode a macro \"string name q 0 a 9\" para complementar o arquivo;\n"
+                + "3º É importante lembrar de colocar x na frente das alternativas que são as corretas. Se não tiver feito faça-o agora\n");
+        JOptionPane.showMessageDialog(null, "Escolha o arquivo");
         Editor_de_variaveis_para_questaoconector editor = new Editor_de_variaveis_para_questaoconector();
         File file = editor.abrirArquivo();
         editor.realizarLeituraDaLinhaDoArquivo(file);
