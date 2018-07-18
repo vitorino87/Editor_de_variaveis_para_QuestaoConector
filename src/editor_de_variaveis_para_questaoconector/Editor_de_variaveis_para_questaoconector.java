@@ -8,7 +8,10 @@ package editor_de_variaveis_para_questaoconector;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
@@ -18,117 +21,130 @@ import javax.swing.JOptionPane;
  */
 public class Editor_de_variaveis_para_questaoconector {
 
-    private JFileChooser fc = new JFileChooser();
-    private File f;
-    private int contador1=0, contador2=0;
-    private String texto1="", texto2="", resposta = "";
-    
-    public int criarSeletorDeArquivos(){
-        fc = new JFileChooser();
-        int returnVal = fc.showOpenDialog(fc);  
-        return returnVal;
-    }
-    
-    public File abrirArquivo(int a){
-        //arquivo selecionado
-        if(a==JFileChooser.APPROVE_OPTION){
+    //private JFileChooser fc = new JFileChooser();
+    //private File f;
+    //private int contador1=0, contador2=0;
+    //private String texto1="", texto2="";//, resposta = "";
+    public File abrirArquivo() {
+        JFileChooser fc = new JFileChooser();
+        int returnVal = fc.showOpenDialog(fc);
+        File f = null;
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
             f = fc.getSelectedFile();
         }
         return f;
     }
-    
+
     @SuppressWarnings("empty-statement")
-    public void realizarLeituraDaLinhaDoArquivo(File file) throws FileNotFoundException, IOException{
-        try(FileInputStream fis = new FileInputStream(file.getAbsolutePath())) {
+    public void realizarLeituraDaLinhaDoArquivo(File file) throws FileNotFoundException, IOException {
+        try (FileInputStream fis = new FileInputStream(file.getAbsolutePath())) {
+            Charset cs = Charset.forName("UTF-8");
+            InputStreamReader isr = new InputStreamReader(fis, cs);
             int ch;
-            String text="";
-            while((ch=fis.read())!=-1){
-                if(ch!=10){
-                    text += String.valueOf((char)ch);
-                }else{
-                    text += String.valueOf((char)ch);
-                    processarLinha(text);
-                    text="";
+            int contador = 0;
+            String resposta = "";
+            String text = "";
+            File arquivoParaSalvar = selecionarLocalParaSalvar();
+            while ((ch = isr.read()) != -1) {
+                if (ch != 10) {
+                    text += String.valueOf((char) ch);
+                } else {
+                    text += String.valueOf((char) ch);
+                    contador = processarLinha(text, arquivoParaSalvar, contador);
+                    text = "";
                 }
             }
-            
-        }catch(Exception ex){
+        } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex.toString());
         }
-        
+
     }
-    
-    public void processarLinha(String text){        
-        if(text.indexOf("xa)")>0){
-            resposta = "0";
-            text=text.replace("xa)", "a)");
+
+    public int processarLinha(String text, File arquivo, int contador) {
+        String text2 = "";
+        if (text.indexOf("e\">e)") > 0 || text.indexOf("e\">xe)") > 0) {            
+            if (text.indexOf("e\">xe)") > 0) {
+                text = text.replace("xe)", "e)");
+                text2 += "b[" + contador + "][5]=4\n";
+                salvarLinhasProcessadas(arquivo.getAbsolutePath() + "/conector.java", text2);
+                text2 = "";
+            }            
+            String[] text3 = {"a", "b", "c", "d", "e"};
+            text2 += "a[" + contador + "]=R.string.q" + contador + "\n";
+            for (int contador2 = 0; contador2 < 5; contador2++) {
+                text2 += "b[" + contador + "][" + contador2 + "]=R.string.q" + contador + text3[contador2] + "\n";
+            }            
+            contador++;
+            //JOptionPane.showMessageDialog(null, text2);
+            salvarLinhasProcessadas(arquivo.getAbsolutePath() + "/conector.java", text2);
+        } else if (text.indexOf("xa)") > 0) {
+            text = text.replace("xa)", "a)");
+            text2 += "b[" + contador + "][5]=0\n";
+            salvarLinhasProcessadas(arquivo.getAbsolutePath() + "/conector.java", text2);
             //text=text.substring(0, text.indexOf("xa)")) + 
             //        text.substring(text.indexOf("xa)")+1, text.length());
-        }else{
-            if(text.indexOf("xb)")>0){
-                resposta = "1";
-                text=text.replace("xb)", "b)");
-                //text=text.substring(0, text.indexOf("xb)")) + 
-                //    text.substring(text.indexOf("xb)")+1, text.length());
-            }else{
-                if(text.indexOf("xc)")>0){
-                    resposta = "2";
-                    text=text.replace("xc)", "c)");
-                    //text=text.substring(0, text.indexOf("xc)")) + 
-                    //    text.substring(text.indexOf("xc)")+1, text.length());
-                }else{
-                    if(text.indexOf("xd)")>0){
-                        resposta = "3";
-                        text=text.replace("xd)", "d)");
-                        //text=text.replace("xe)", "e)");
-                        //text=text.substring(0, text.indexOf("xd)")) + 
-                           // text.substring(text.indexOf("xd)")+1, text.length());
-                    }else{
-                        if(text.indexOf("xe)")>0){
-                            resposta = "4";
-                            text=text.replace("xe)", "e)");                            
-                        }
-                    }
+        } else if (text.indexOf("xb)") > 0) {
+            text = text.replace("xb)", "b)");
+            text2 += "b[" + contador + "][5]=1\n";
+            salvarLinhasProcessadas(arquivo.getAbsolutePath() + "/conector.java", text2);
+            //text=text.substring(0, text.indexOf("xb)")) + 
+            //    text.substring(text.indexOf("xb)")+1, text.length());
+        } else if (text.indexOf("xc)") > 0) {
+            text = text.replace("xc)", "c)");
+            text2 += "b[" + contador + "][5]=2\n";
+            salvarLinhasProcessadas(arquivo.getAbsolutePath() + "/conector.java", text2);
+            //text=text.substring(0, text.indexOf("xc)")) + 
+            //    text.substring(text.indexOf("xc)")+1, text.length());
+        } else if (text.indexOf("xd)") > 0) {
+            text = text.replace("xd)", "d)");
+            text2 += "b[" + contador + "][5]=3\n";
+            salvarLinhasProcessadas(arquivo.getAbsolutePath() + "/conector.java", text2);
+            //text=text.replace("xe)", "e)");
+            //text=text.substring(0, text.indexOf("xd)")) + 
+            // text.substring(text.indexOf("xd)")+1, text.length());
+        } else if (text.indexOf("xe)") > 0) {
+//                            text=text.replace("xe)", "e)");                            
+//                            text2+="b["+contador+"][5]=4\n";  
+//                            salvarLinhasProcessadas(arquivo.getAbsolutePath()+"/conector.java", text2); 
+        }
+
+        //JOptionPane.showMessageDialog(null, text);
+        salvarLinhasProcessadas(arquivo.getAbsolutePath() + "/questoes.xml", text);
+        return contador;
+    }
+
+    public void salvarLinhasProcessadas(String file, String textoParaSalvar) {
+        try {
+            if (file != null) {
+                try (FileWriter fw = new FileWriter(file, true)) {
+                    fw.write(textoParaSalvar);
                 }
-            }           
-        }
-        texto1+=text;
-        if(text.indexOf("e)")>0){
-            String text2 = "";
-            String[] text3 = {"a","b","c","d","e"};
-            text2+="a["+contador1+"]=R.string.q"+contador1+"\n";
-            for(contador2=0;contador2<5;contador2++){
-                text2+="b["+contador1+"]["+contador2+"]=R.string.q"+contador1+text3[contador2];                           
             }
-            text2+="b["+contador1+"]["+contador2+"]="+resposta;       
-            contador1++;      
-            texto2+=text2;
+        } catch (Exception ex) {
+
         }
+
     }
-    
-    public void salvarLinhasProcessadasEmDoisArquivos(String text, String text2){
-        File file = selecionarLocalParaSalvar();
-        if(file != null){
-            
-        }
-    }
-    
-    public File selecionarLocalParaSalvar(){
+
+    public File selecionarLocalParaSalvar() {
+        JFileChooser fc = new JFileChooser();
+        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         int returnval = fc.showSaveDialog(fc);
         File file = null;
-        if(returnval==JFileChooser.APPROVE_OPTION){
+        if (returnval == JFileChooser.APPROVE_OPTION) {
             file = fc.getSelectedFile();
-        }else{
+        } else {
             JOptionPane.showMessageDialog(null, "O programa será encerrado!");
+            System.exit(0);
         }
         return file;
     }
-    
+
     public static void main(String[] args) throws IOException {
         Editor_de_variaveis_para_questaoconector editor = new Editor_de_variaveis_para_questaoconector();
-        int a = editor.criarSeletorDeArquivos();
-        File file = editor.abrirArquivo(a);
+        File file = editor.abrirArquivo();
         editor.realizarLeituraDaLinhaDoArquivo(file);
+        JOptionPane.showMessageDialog(null, "O programa terminou o serviço!");
     }
-    
+
 }
