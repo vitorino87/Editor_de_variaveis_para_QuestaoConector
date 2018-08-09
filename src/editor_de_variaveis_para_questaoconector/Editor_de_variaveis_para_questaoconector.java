@@ -110,7 +110,7 @@ public class Editor_de_variaveis_para_questaoconector {
 //                            salvarLinhasProcessadas(arquivo.getAbsolutePath()+"/conector.java", text2); 
         }
 
-        //JOptionPane.showMessageDialog(null, text);
+        //JOptionPane.showMessageDialog(null, text);        
         salvarLinhasProcessadas(arquivo.getAbsolutePath() + "/questoes.xml", text);
         return contador;
     }
